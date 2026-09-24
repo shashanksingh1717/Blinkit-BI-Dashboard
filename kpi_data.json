@@ -1,0 +1,207 @@
+{
+  "total_revenue": 11009308.5,
+  "total_orders": 5000,
+  "aov": 2201.86,
+  "total_customers": 2500,
+  "avg_rating": 3.34,
+  "on_time_pct": 69.4,
+  "avg_delivery_min": 4.4,
+  "total_marketing_spend": 16319838.24,
+  "total_marketing_revenue": 32193407.37,
+  "blended_roas": 1.97,
+  "damage_rate_pct": 48.97,
+  "monthly_trend": [
+    {
+      "month": "2023-03",
+      "revenue": 272878.96
+    },
+    {
+      "month": "2023-04",
+      "revenue": 554344.77
+    },
+    {
+      "month": "2023-05",
+      "revenue": 608213.54
+    },
+    {
+      "month": "2023-06",
+      "revenue": 505227.66
+    },
+    {
+      "month": "2023-07",
+      "revenue": 567639.91
+    },
+    {
+      "month": "2023-08",
+      "revenue": 623472.35
+    },
+    {
+      "month": "2023-09",
+      "revenue": 571117.81
+    },
+    {
+      "month": "2023-10",
+      "revenue": 578369.83
+    },
+    {
+      "month": "2023-11",
+      "revenue": 567783.74
+    },
+    {
+      "month": "2023-12",
+      "revenue": 615709.03
+    },
+    {
+      "month": "2024-01",
+      "revenue": 560423.5599999999
+    },
+    {
+      "month": "2024-02",
+      "revenue": 545090.11
+    },
+    {
+      "month": "2024-03",
+      "revenue": 543181.85
+    },
+    {
+      "month": "2024-04",
+      "revenue": 538754.75
+    },
+    {
+      "month": "2024-05",
+      "revenue": 574163.61
+    },
+    {
+      "month": "2024-06",
+      "revenue": 539074.85
+    },
+    {
+      "month": "2024-07",
+      "revenue": 573111.98
+    },
+    {
+      "month": "2024-08",
+      "revenue": 546194.57
+    },
+    {
+      "month": "2024-09",
+      "revenue": 518695.03
+    },
+    {
+      "month": "2024-10",
+      "revenue": 537702.94
+    },
+    {
+      "month": "2024-11",
+      "revenue": 68157.65
+    }
+  ],
+  "delivery_status": {
+    "On Time": 3470,
+    "Slightly Delayed": 1037,
+    "Significantly Delayed": 493
+  },
+  "segment_counts": {
+    "Regular": 639,
+    "Premium": 633,
+    "New": 628,
+    "Inactive": 600
+  },
+  "segment_revenue": {
+    "Inactive": 2591975.65,
+    "New": 2795854.48,
+    "Premium": 2731329.71,
+    "Regular": 2890148.66
+  },
+  "category_revenue": {
+    "Dairy & Breakfast": 639222.19,
+    "Pharmacy": 592368.57,
+    "Fruits & Vegetables": 559053.08,
+    "Pet Care": 539888.75,
+    "Household Care": 444244.25,
+    "Personal Care": 394894.61,
+    "Snacks & Munchies": 394648.71,
+    "Cold Drinks & Juices": 392717.62,
+    "Grocery & Staples": 359937.82,
+    "Baby Care": 348227.18,
+    "Instant & Frozen Food": 307212.65
+  },
+  "top_products": {
+    "Vitamins": 260822.01,
+    "Pet Treats": 252007.37,
+    "Cough Syrup": 203569.98,
+    "Toilet Cleaner": 199837.48,
+    "Bread": 184851.1,
+    "Dish Soap": 184441.21,
+    "Cat Food": 166596.39,
+    "Baby Wipes": 158768.41
+  },
+  "payment_method": {
+    "Card": 1285,
+    "Cash": 1257,
+    "Wallet": 1244,
+    "UPI": 1214
+  },
+  "sentiment": {
+    "Neutral": 1738,
+    "Negative": 1642,
+    "Positive": 1620
+  },
+  "feedback_category": {
+    "Delivery": 1271,
+    "Customer Service": 1266,
+    "Product Quality": 1250,
+    "App Experience": 1213
+  },
+  "rating_dist": {
+    "1": 540,
+    "2": 538,
+    "3": 1398,
+    "4": 1708,
+    "5": 816
+  },
+  "marketing_channel": [
+    {
+      "channel": "App",
+      "spend": 4213378.75,
+      "revenue": 8075010.49,
+      "roas": 1.92
+    },
+    {
+      "channel": "Email",
+      "spend": 3997488.04,
+      "revenue": 8189331.58,
+      "roas": 2.05
+    },
+    {
+      "channel": "SMS",
+      "spend": 3998607.54,
+      "revenue": 7938649.32,
+      "roas": 1.99
+    },
+    {
+      "channel": "Social Media",
+      "spend": 4110363.91,
+      "revenue": 7990415.98,
+      "roas": 1.94
+    }
+  ],
+  "rating_by_delay": {
+    "Delayed": 3.37,
+    "On Time": 3.33
+  },
+  "rfm_segments": {
+    "Loyal": 735,
+    "Champions": 606,
+    "At Risk": 455,
+    "Dormant": 376
+  },
+  "top_areas": {
+    "Orai": 99590.96,
+    "Deoghar": 95386.05,
+    "Nandyal": 83281.1,
+    "Gandhinagar": 82273.95,
+    "Bhopal": 78854.32,
+    "Ghaziabad": 72599.85
+  }
+}
