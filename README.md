@@ -51,7 +51,7 @@ Seven analytical queries that go beyond basic aggregation:
 
 ### d) Interactive KPI dashboard
 Since I couldn't attach a live `.pbix`/`.twbx` file here, the same cleaned data model and the same KPI logic that would drive the Power BI / Tableau dashboards is rendered as a live, clickable web dashboard — same numbers, same charts, tab-based navigation across Sales, Customers, Delivery, Products, and Marketing.
-👉 **[Open the live dashboard](https://claude.ai/artifact/Pq6kJveTiMQuar4USEGVHa)**
+👉 **[Open the live dashboard](https://shashanksingh1717.github.io/Blinkit-BI-Dashboard/)**
 
 ## 4. What the Numbers Say
 
