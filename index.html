@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Blinkit BI Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#0f1115; --card:#171a21; --border:#262b36; --text:#eef1f6; --muted:#93a0b4;
+  --accent:#f8cb46; --accent2:#3ecf8e; --danger:#ff6b6b; --blue:#5b9dff;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){ --bg:#f5f6f9; --card:#ffffff; --border:#e3e6ec; --text:#1a1d24; --muted:#5b6472; }
+}
+:root[data-theme="light"]{ --bg:#f5f6f9; --card:#ffffff; --border:#e3e6ec; --text:#1a1d24; --muted:#5b6472; }
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;height:100%}
+header{padding:22px 20px 8px;max-width:1200px;margin:0 auto}
+header h1{margin:0;font-size:22px;font-weight:700}
+header p{margin:4px 0 0;color:var(--muted);font-size:13.5px}
+.wrap{max-width:1200px;margin:0 auto;padding:12px 20px 40px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:14px 0 20px}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px}
+.kpi .v{font-size:20px;font-weight:700}
+.kpi .l{color:var(--muted);font-size:12px;margin-top:2px}
+.kpi .v.good{color:var(--accent2)} .kpi .v.warn{color:var(--danger)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:760px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;overflow-x:auto}
+.card h3{margin:0 0 10px;font-size:14px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.03em}
+.card canvas{max-height:230px}
+.tabs{display:flex;gap:6px;margin:18px 0 12px;flex-wrap:wrap}
+.tab{background:var(--card);border:1px solid var(--border);color:var(--muted);padding:7px 14px;border-radius:20px;font-size:13px;cursor:pointer}
+.tab.active{background:var(--accent);color:#1a1d24;border-color:var(--accent);font-weight:600}
+.section{display:none}.section.active{display:block}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:20px 0 10px}
+</style>
+</head>
+<body>
+<header>
+  <h1>🛒 Blinkit Business Intelligence Dashboard</h1>
+  <p>Sales · Customers · Delivery Ops · Product & Marketing Analytics — Mar 2023 to Nov 2024</p>
+</header>
+<div class="wrap">
+
+  <div class="kpis" id="kpiRow"></div>
+
+  <div class="tabs">
+    <div class="tab active" data-t="sales">Sales</div>
+    <div class="tab" data-t="customers">Customers</div>
+    <div class="tab" data-t="delivery">Delivery</div>
+    <div class="tab" data-t="products">Products</div>
+    <div class="tab" data-t="marketing">Marketing</div>
+  </div>
+
+  <div class="section active" id="sales">
+    <div class="grid">
+      <div class="card"><h3>Monthly Revenue Trend</h3><canvas id="c_trend"></canvas></div>
+      <div class="card"><h3>Revenue by Payment Method</h3><canvas id="c_pay"></canvas></div>
+    </div>
+  </div>
+
+  <div class="section" id="customers">
+    <div class="grid">
+      <div class="card"><h3>Customer Segments</h3><canvas id="c_seg"></canvas></div>
+      <div class="card"><h3>RFM Segmentation</h3><canvas id="c_rfm"></canvas></div>
+      <div class="card"><h3>Revenue by Segment (₹)</h3><canvas id="c_segrev"></canvas></div>
+      <div class="card"><h3>Top Areas by Revenue (₹)</h3><canvas id="c_area"></canvas></div>
+    </div>
+  </div>
+
+  <div class="section" id="delivery">
+    <div class="grid">
+      <div class="card"><h3>Delivery Status Split</h3><canvas id="c_delstatus"></canvas></div>
+      <div class="card"><h3>Avg Rating: On-Time vs Delayed</h3><canvas id="c_ratedelay"></canvas></div>
+    </div>
+  </div>
+
+  <div class="section" id="products">
+    <div class="grid">
+      <div class="card"><h3>Revenue by Category</h3><canvas id="c_cat"></canvas></div>
+      <div class="card"><h3>Top 8 Products by Revenue</h3><canvas id="c_top"></canvas></div>
+    </div>
+  </div>
+
+  <div class="section" id="marketing">
+    <div class="grid">
+      <div class="card"><h3>ROAS by Channel</h3><canvas id="c_roas"></canvas></div>
+      <div class="card"><h3>Feedback Sentiment & Rating Mix</h3><canvas id="c_sent"></canvas></div>
+    </div>
+  </div>
+
+  <footer>Built from 8 raw source tables · cleaned & feature-engineered in Python · modeled in MySQL · this view mirrors the Power BI / Tableau layer</footer>
+</div>
+
+<script>
+const D = {
+"total_revenue":11009308.5,"total_orders":5000,"aov":2201.86,"total_customers":2500,
+"avg_rating":3.34,"on_time_pct":69.4,"blended_roas":1.97,
+"monthly_trend":[{"month":"2023-03","revenue":272878.96},{"month":"2023-04","revenue":554344.77},{"month":"2023-05","revenue":608213.54},{"month":"2023-06","revenue":505227.66},{"month":"2023-07","revenue":567639.91},{"month":"2023-08","revenue":623472.35},{"month":"2023-09","revenue":571117.81},{"month":"2023-10","revenue":578369.83},{"month":"2023-11","revenue":567783.74},{"month":"2023-12","revenue":615709.03},{"month":"2024-01","revenue":560423.56},{"month":"2024-02","revenue":545090.11},{"month":"2024-03","revenue":543181.85},{"month":"2024-04","revenue":538754.75},{"month":"2024-05","revenue":574163.61},{"month":"2024-06","revenue":539074.85},{"month":"2024-07","revenue":573111.98},{"month":"2024-08","revenue":546194.57},{"month":"2024-09","revenue":518695.03},{"month":"2024-10","revenue":537702.94},{"month":"2024-11","revenue":68157.65}],
+"delivery_status":{"On Time":3470,"Slightly Delayed":1037,"Significantly Delayed":493},
+"segment_counts":{"Regular":639,"Premium":633,"New":628,"Inactive":600},
+"segment_revenue":{"Inactive":2591975.65,"New":2795854.48,"Premium":2731329.71,"Regular":2890148.66},
+"category_revenue":{"Dairy & Breakfast":639222.19,"Pharmacy":592368.57,"Fruits & Vegetables":559053.08,"Pet Care":539888.75,"Household Care":444244.25,"Personal Care":394894.61,"Snacks & Munchies":394648.71,"Cold Drinks & Juices":392717.62,"Grocery & Staples":359937.82,"Baby Care":348227.18,"Instant & Frozen Food":307212.65},
+"top_products":{"Vitamins":260822.01,"Pet Treats":252007.37,"Cough Syrup":203569.98,"Toilet Cleaner":199837.48,"Bread":184851.1,"Dish Soap":184441.21,"Cat Food":166596.39,"Baby Wipes":158768.41},
+"payment_method":{"Card":1285,"Cash":1257,"Wallet":1244,"UPI":1214},
+"sentiment":{"Neutral":1738,"Negative":1642,"Positive":1620},
+"rating_dist":{"1":540,"2":538,"3":1398,"4":1708,"5":816},
+"marketing_channel":[{"channel":"App","spend":4213378.75,"revenue":8075010.49,"roas":1.92},{"channel":"Email","spend":3997488.04,"revenue":8189331.58,"roas":2.05},{"channel":"SMS","spend":3998607.54,"revenue":7938649.32,"roas":1.99},{"channel":"Social Media","spend":4110363.91,"revenue":7990415.98,"roas":1.94}],
+"rating_by_delay":{"Delayed":3.37,"On Time":3.33},
+"rfm_segments":{"Loyal":735,"Champions":606,"At Risk":455,"Dormant":376},
+"top_areas":{"Orai":99590.96,"Deoghar":95386.05,"Nandyal":83281.1,"Gandhinagar":82273.95,"Bhopal":78854.32,"Ghaziabad":72599.85}
+};
+
+const fmtINR = n => '₹' + (n>=1e7?(n/1e7).toFixed(2)+'Cr':n>=1e5?(n/1e5).toFixed(2)+'L':n.toLocaleString('en-IN'));
+const palette = ['#f8cb46','#3ecf8e','#5b9dff','#ff6b6b','#b28dff','#ff9f5b','#4dd0e1','#e57ee5'];
+Chart.defaults.color = getComputedStyle(document.body).getPropertyValue('--muted') || '#93a0b4';
+Chart.defaults.borderColor = 'rgba(150,150,150,.15)';
+Chart.defaults.font.size = 11;
+
+document.getElementById('kpiRow').innerHTML = `
+  <div class="kpi"><div class="v">${fmtINR(D.total_revenue)}</div><div class="l">Total Revenue</div></div>
+  <div class="kpi"><div class="v">${D.total_orders.toLocaleString('en-IN')}</div><div class="l">Total Orders</div></div>
+  <div class="kpi"><div class="v">₹${D.aov}</div><div class="l">Avg Order Value</div></div>
+  <div class="kpi"><div class="v">${D.total_customers.toLocaleString('en-IN')}</div><div class="l">Customers</div></div>
+  <div class="kpi"><div class="v ${D.on_time_pct>75?'good':'warn'}">${D.on_time_pct}%</div><div class="l">On-Time Delivery</div></div>
+  <div class="kpi"><div class="v">⭐ ${D.avg_rating}</div><div class="l">Avg Rating (5000 fb)</div></div>
+  <div class="kpi"><div class="v good">${D.blended_roas}x</div><div class="l">Blended Marketing ROAS</div></div>
+`;
+
+function bar(id,labels,data,horizontal=false,colors=palette){
+  new Chart(document.getElementById(id),{type:'bar',data:{labels,datasets:[{data,backgroundColor:colors}]},
+    options:{indexAxis:horizontal?'y':'x',plugins:{legend:{display:false}},responsive:true,maintainAspectRatio:false,
+      scales:{x:{grid:{display:false}},y:{grid:{color:'rgba(150,150,150,.1)'}}}}});
+}
+function line(id,labels,data){
+  new Chart(document.getElementById(id),{type:'line',data:{labels,datasets:[{data,borderColor:'#f8cb46',backgroundColor:'rgba(248,203,70,.15)',fill:true,tension:.3,pointRadius:2}]},
+    options:{plugins:{legend:{display:false}},responsive:true,maintainAspectRatio:false,
+      scales:{x:{ticks:{maxRotation:60,autoSkip:true,maxTicksLimit:8},grid:{display:false}},y:{grid:{color:'rgba(150,150,150,.1)'}}}}});
+}
+function doughnut(id,labels,data){
+  new Chart(document.getElementById(id),{type:'doughnut',data:{labels,datasets:[{data,backgroundColor:palette}]},
+    options:{plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10}}}},responsive:true,maintainAspectRatio:false}});
+}
+
+line('c_trend', D.monthly_trend.map(m=>m.month), D.monthly_trend.map(m=>m.revenue));
+doughnut('c_pay', Object.keys(D.payment_method), Object.values(D.payment_method));
+
+doughnut('c_seg', Object.keys(D.segment_counts), Object.values(D.segment_counts));
+doughnut('c_rfm', Object.keys(D.rfm_segments), Object.values(D.rfm_segments));
+bar('c_segrev', Object.keys(D.segment_revenue), Object.values(D.segment_revenue));
+bar('c_area', Object.keys(D.top_areas), Object.values(D.top_areas), true);
+
+doughnut('c_delstatus', Object.keys(D.delivery_status), Object.values(D.delivery_status));
+bar('c_ratedelay', Object.keys(D.rating_by_delay), Object.values(D.rating_by_delay));
+
+bar('c_cat', Object.keys(D.category_revenue), Object.values(D.category_revenue), true);
+bar('c_top', Object.keys(D.top_products), Object.values(D.top_products), true);
+
+bar('c_roas', D.marketing_channel.map(m=>m.channel), D.marketing_channel.map(m=>m.roas));
+bar('c_sent', Object.keys(D.sentiment), Object.values(D.sentiment));
+
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');
+  document.getElementById(t.dataset.t).classList.add('active');
+}));
+</script>
+</body>
+</html>
